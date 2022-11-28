@@ -13,40 +13,65 @@ import { selectUser } from "../../feature/userSlice";
 import { stringAvatar } from "../../utils/Avatar";
 
 function MainQuestion() {
+  const useLocalStorage = (key, defaultValue) => {
+    const [storedValue, setStoredValue] = useState(() => {
+      try {
+        const value = localStorage.getItem(key);
+
+        if (value) {
+          return JSON.parse(value);
+        } else {
+          localStorage.setItem(key, JSON.stringify(defaultValue));
+          return defaultValue;
+        }
+      } catch (error) {
+        return defaultValue;
+      }
+    });
+
+    const setValue = (newValue) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(newValue));
+      } catch (error) {
+        console.log(error);
+      }
+      setStoredValue(newValue);
+    };
+    return [storedValue, setValue];
+  };
+
+  //votos
+  const [count, setCount] = useLocalStorage("count", 0);
+
   var toolbarOptions = [
-    ["bold", "italic", "underline", "strike"], // toggled buttons
+    ["bold", "italic", "underline", "strike"],
     ["blockquote", "code-block"],
 
-    [{ header: 1 }, { header: 2 }], // custom button values
+    [{ header: 1 }, { header: 2 }],
     [{ list: "ordered" }, { list: "bullet" }],
-    [{ script: "sub" }, { script: "super" }], // superscript/subscript
-    [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-    [{ direction: "rtl" }], // text direction
+    [{ script: "sub" }, { script: "super" }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    [{ direction: "rtl" }],
 
-    // [{ size: ["small", false, "large", "huge"] }], // custom dropdown
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
     [
       { color: ["#ff0000", "#00ff00", "#0000ff", "#220055"] },
       { background: [] },
-    ], // dropdown with defaults from theme
+    ],
     [{ font: [] }],
     [{ align: [] }],
 
-    ["clean"], // remove formatting button
+    ["clean"],
   ];
   Editor.modules = {
     syntax: false,
     toolbar: toolbarOptions,
     clipboard: {
-      // toggle to add extra line breaks when pasting HTML:
       matchVisual: false,
     },
   };
-  /*
-   * Quill editor formats
-   * See https://quilljs.com/docs/formats/
-   */
+
   Editor.formats = [
     "header",
     "font",
@@ -168,11 +193,15 @@ function MainQuestion() {
           <div className="all-questions-container">
             <div className="all-questions-left">
               <div className="all-options">
-                <p className="arrow">▲</p>
+                <p className="arrow" onClick={() => setCount(count + 1)}>
+                  ▲
+                </p>
 
-                <p className="arrow">0</p>
+                <p className="arrow">{count}</p>
 
-                <p className="arrow">▼</p>
+                <p className="arrow" onClick={() => setCount(count - 1)}>
+                  ▼
+                </p>
 
                 <BookmarkIcon />
 
@@ -299,14 +328,6 @@ function MainQuestion() {
             </>
           ))}
         </div>
-        {/* <div className="questions">
-          <div className="question">
-            <AllQuestions />
-            <AllQuestions />
-            <AllQuestions />
-            <AllQuestions />
-          </div>
-        </div> */}
       </div>
       <div className="main-answer">
         <h3

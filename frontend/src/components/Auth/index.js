@@ -102,7 +102,7 @@ function Index() {
             />
             <p>{loading ? "Signing in..." : "Login with Google"}</p>
           </div>
-          <div className="single-option">
+          {/* <div className="single-option">
             <img
               alt="github"
               src="https://image.flaticon.com/icons/png/512/270/270798.png"
@@ -115,7 +115,7 @@ function Index() {
               src="https://image.flaticon.com/icons/png/512/733/733547.png"
             />
             <p>Login with Facebook</p>
-          </div>
+          </div> */}
         </div>
         <div className="auth-login">
           <div className="auth-login-container">
